@@ -1,1 +1,15 @@
+springdoc:
+  swagger-ui:
+    path: /swagger
 
+
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/turing-api
+    driver-class-name: org.postgresql.Driver
+
+turing:
+  first-state: q0
+  final-state: HALT
