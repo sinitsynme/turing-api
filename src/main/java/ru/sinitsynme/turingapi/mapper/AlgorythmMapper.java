@@ -6,6 +6,7 @@ import ru.sinitsynme.turingapi.entity.Command;
 import ru.sinitsynme.turingapi.entity.MoveCaretOption;
 import ru.sinitsynme.turingapi.entity.SymbolStates;
 import ru.sinitsynme.turingapi.rest.dto.AlgorythmRequestDto;
+import ru.sinitsynme.turingapi.rest.dto.AlgorythmResponseDto;
 import ru.sinitsynme.turingapi.rest.dto.CommandDto;
 import ru.sinitsynme.turingapi.rest.dto.SymbolStatesDto;
 
@@ -14,11 +15,19 @@ import java.util.*;
 @Component
 public class AlgorythmMapper {
 
+    public AlgorythmResponseDto mapAlgorythmToResponseDto(Algorythm algorythm) {
+        AlgorythmResponseDto responseDto = new AlgorythmResponseDto();
+        responseDto.setId(algorythm.getId());
+        responseDto.setName(algorythm.getName());
+        responseDto.setBasic(algorythm.isBasic());
+        return responseDto;
+    }
+
     public Algorythm mapAlgorythmFromDto(AlgorythmRequestDto requestDto) {
         Algorythm algorythm = new Algorythm();
         algorythm.setName(requestDto.getName());
         algorythm.setBasic(requestDto.isBasic());
-        algorythm.setAlphabet(requestDto.getAlphabet().split(""));
+        algorythm.setAlphabet(requestDto.getAlphabet());
 
         List<SymbolStates> symbolStates = requestDto
                 .getSymbols()
@@ -26,7 +35,7 @@ public class AlgorythmMapper {
                 .map(this::mapSymbolStatesFromDto)
                 .toList();
 
-        algorythm.setSymbolStates(symbolStates);
+        algorythm.setSymbols(symbolStates);
         algorythm.setStates(getAllStates(requestDto));
 
         return algorythm;
@@ -42,15 +51,15 @@ public class AlgorythmMapper {
             statesCommands.put(key, mapCommandFromDto(value));
         });
 
-        symbolStates.setPairsOfStatesAndDedicatedCommands(statesCommands);
+        symbolStates.setStates(statesCommands);
         return symbolStates;
     }
 
     private Command mapCommandFromDto(CommandDto commandDto) {
         Command command = new Command();
         command.setNextState(commandDto.getNextState());
-        command.setWrittenSymbol(commandDto.getSymbol());
-        command.setMoveCaretOption(MoveCaretOption.parseFromAlias(commandDto.getMove()));
+        command.setSymbol(commandDto.getSymbol());
+        command.setMoveCaretOption(MoveCaretOption.parseFromAlias(commandDto.getMoveCaretOption()));
 
         return command;
     }

@@ -1,33 +1,38 @@
 package ru.sinitsynme.turingapi.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 import java.util.Set;
 
+@Document("algorythms")
 public class Algorythm {
-    private int id;
+    @Id
+    private String id;
     private String name;
-    private String[] alphabet;
+    private String alphabet;
     private boolean isBasic;
     private Set<String> states;
-    private List<SymbolStates> symbolStates;
+    private List<SymbolStates> symbols;
 
     public Algorythm() {
     }
 
-    public Algorythm(int id, String name, String[] alphabet, boolean isBasic, Set<String> states, List<SymbolStates> symbolStates) {
+    public Algorythm(String id, String name, String alphabet, boolean isBasic, Set<String> states, List<SymbolStates> symbols) {
         this.id = id;
         this.name = name;
         this.alphabet = alphabet;
         this.isBasic = isBasic;
         this.states = states;
-        this.symbolStates = symbolStates;
+        this.symbols = symbols;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -55,19 +60,19 @@ public class Algorythm {
         this.states = states;
     }
 
-    public List<SymbolStates> getSymbolStates() {
-        return symbolStates;
+    public List<SymbolStates> getSymbols() {
+        return symbols;
     }
 
-    public void setSymbolStates(List<SymbolStates> symbolStates) {
-        this.symbolStates = symbolStates;
+    public void setSymbols(List<SymbolStates> symbols) {
+        this.symbols = symbols;
     }
 
-    public String[] getAlphabet() {
+    public String getAlphabet() {
         return alphabet;
     }
 
-    public void setAlphabet(String[] alphabet) {
+    public void setAlphabet(String alphabet) {
         this.alphabet = alphabet;
     }
 }

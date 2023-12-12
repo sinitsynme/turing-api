@@ -1,73 +1,111 @@
 package ru.sinitsynme.turingapi.engine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.sinitsynme.turingapi.entity.Algorythm;
-import ru.sinitsynme.turingapi.entity.AlgorythmSolutionStep;
-import ru.sinitsynme.turingapi.entity.Command;
-import ru.sinitsynme.turingapi.entity.MoveCaretOption;
+import ru.sinitsynme.turingapi.entity.*;
+import ru.sinitsynme.turingapi.exception.types.NoCommandException;
+import ru.sinitsynme.turingapi.exception.types.SolutionTimeoutException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
-//@ConfigurationProperties TODO
 public class TuringEngine {
 
-//    @Value("${turing.firstState}") final
-    private  String firstState = "q0";
-//    @Value("${turing.finalState}")
-    private  String finalState = "HALT";
+    private TuringEngineProperties turingEngineProperties;
+    private Map<SymbolStatePair, Command> optimizedAlgorythmMap;
     private String currentState;
     private int caretIndex = 0;
 
-//    public TuringEngine(String firstState, String finalState) {
-//        this.firstState = firstState;
-//        this.finalState = finalState;
-//    }
+    private Logger log = LoggerFactory.getLogger(TuringEngine.class);
+
+    public TuringEngine(TuringEngineProperties turingEngineProperties) {
+        this.turingEngineProperties = turingEngineProperties;
+    }
 
     public List<AlgorythmSolutionStep> solveAlgorythm(Algorythm algorythm, String tape) {
         caretIndex = 0;
-        currentState = firstState;
+        currentState = turingEngineProperties.getFirstState();
+        optimizedAlgorythmMap = optimizeAlgorythmFromDbToMap(algorythm);
+
         List<AlgorythmSolutionStep> solutionSteps = new ArrayList<>();
 
-        while (!currentState.equals(finalState)) {
-            //TODO add cycle check
+        long timeout = turingEngineProperties.getMsTimeout();
+        long solvingStartTime = System.currentTimeMillis();
+
+        log.info("Starting to solve algorythm: " + algorythm.getName());
+        log.info("Max duration in ms: " + timeout);
+        log.info("Solving start time: " + solvingStartTime);
+
+        while (!currentState.equals(turingEngineProperties.getFinalState())) {
+
+            checkTimeout(solvingStartTime, timeout);
+
             solutionSteps.add(fixStep(tape));
-            tape = getTapeAfterOneIteration(algorythm, tape);
+            tape = getTapeAfterOneIteration(tape);
         }
+
+        log.info("Алгоритм выполнен!");
 
         solutionSteps.add(fixStep(tape));
         return solutionSteps;
     }
 
+    private void checkTimeout(long solvingStartTime, long timeout) {
+        long now = System.currentTimeMillis();
+
+        if (now - solvingStartTime > timeout) {
+            log.warn("Алгоритм зациклился");
+            throw new SolutionTimeoutException("Время выполнения алгоритма превысило допустимое!");
+        }
+    }
+
     private AlgorythmSolutionStep fixStep(String tape) {
         return new AlgorythmSolutionStep(tape, caretIndex, currentState);
     }
-    private String getTapeAfterOneIteration(Algorythm algorythm, String tape) {
+
+    private Map<SymbolStatePair, Command> optimizeAlgorythmFromDbToMap(Algorythm algorythm) {
+        Map<SymbolStatePair, Command> optimizedAlgorythmMap = new HashMap<>();
+        algorythm.getSymbols().forEach(
+                symbol -> symbol.getStates().forEach(
+                        (state, command) -> {
+                            SymbolStatePair symbolStatePair = new SymbolStatePair(symbol.getSymbol(), state);
+                            optimizedAlgorythmMap.put(symbolStatePair, command);
+                        }
+                )
+        );
+        return optimizedAlgorythmMap;
+    }
+
+    private String getTapeAfterOneIteration(String tape) {
         char currentSymbol = tape.charAt(caretIndex);
 
-        Command command = algorythm
-                .getSymbolStates()
-                .stream()
-                .filter(it -> it.getSymbol().equals(currentSymbol))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException()) //TODO
-                .getPairsOfStatesAndDedicatedCommands().get(currentState);
+        Command command = optimizedAlgorythmMap.get(new SymbolStatePair(currentSymbol, currentState));
 
-        char overwrittenSymbol = command.getWrittenSymbol();
+        if (command == null) {
+            throw new NoCommandException(String.format("Команды для символа %s и состония %s нет",
+                    currentSymbol, currentState));
+        }
+
+        char overwrittenSymbol = command.getSymbol();
         String newTape = replaceChar(tape, overwrittenSymbol, caretIndex);
 
         currentState = command.getNextState();
         moveCaret(command.getMoveCaretOption());
 
         return newTape;
+
+
     }
+
 
     private void moveCaret(MoveCaretOption moveCaretOption) {
         if (moveCaretOption == MoveCaretOption.RIGHT) {
             caretIndex++;
-        }
-        else if (moveCaretOption == MoveCaretOption.LEFT) {
+        } else if (moveCaretOption == MoveCaretOption.LEFT) {
             caretIndex--;
         }
 

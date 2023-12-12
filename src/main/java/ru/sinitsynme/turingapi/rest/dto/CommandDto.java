@@ -3,15 +3,15 @@ package ru.sinitsynme.turingapi.rest.dto;
 public class CommandDto {
     private String nextState;
     private Character symbol;
-    private Character move;
+    private Character moveCaretOption;
 
     public CommandDto() {
     }
 
-    public CommandDto(String nextState, Character symbol, Character move) {
+    public CommandDto(String nextState, Character symbol, Character moveCaretOption) {
         this.nextState = nextState;
         this.symbol = symbol;
-        this.move = move;
+        this.moveCaretOption = moveCaretOption;
     }
 
     public String getNextState() {
@@ -30,12 +30,12 @@ public class CommandDto {
         this.symbol = symbol;
     }
 
-    public Character getMove() {
-        return move;
+    public Character getMoveCaretOption() {
+        return moveCaretOption;
     }
 
-    public void setMove(Character move) {
-        this.move = move;
+    public void setMoveCaretOption(Character moveCaretOption) {
+        this.moveCaretOption = moveCaretOption;
     }
 
 

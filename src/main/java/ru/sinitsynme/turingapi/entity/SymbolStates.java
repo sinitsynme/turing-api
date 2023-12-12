@@ -5,14 +5,14 @@ import java.util.Map;
 public class SymbolStates {
 
     private Character symbol;
-    private Map<String, Command> pairsOfStatesAndDedicatedCommands;
+    private Map<String, Command> states;
 
     public SymbolStates() {
     }
 
-    public SymbolStates(Character symbol, Map<String, Command> pairsOfStatesAndDedicatedCommands) {
+    public SymbolStates(Character symbol, Map<String, Command> states) {
         this.symbol = symbol;
-        this.pairsOfStatesAndDedicatedCommands = pairsOfStatesAndDedicatedCommands;
+        this.states = states;
     }
 
     public Character getSymbol() {
@@ -23,11 +23,11 @@ public class SymbolStates {
         this.symbol = symbol;
     }
 
-    public Map<String, Command> getPairsOfStatesAndDedicatedCommands() {
-        return pairsOfStatesAndDedicatedCommands;
+    public Map<String, Command> getStates() {
+        return states;
     }
 
-    public void setPairsOfStatesAndDedicatedCommands(Map<String, Command> pairsOfStatesAndDedicatedCommands) {
-        this.pairsOfStatesAndDedicatedCommands = pairsOfStatesAndDedicatedCommands;
+    public void setStates(Map<String, Command> states) {
+        this.states = states;
     }
 }

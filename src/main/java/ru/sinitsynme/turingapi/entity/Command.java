@@ -2,25 +2,25 @@ package ru.sinitsynme.turingapi.entity;
 
 public class Command {
 
-    private Character writtenSymbol;
+    private Character symbol;
     private String nextState;
     private MoveCaretOption moveCaretOption;
 
     public Command() {
     }
 
-    public Command(Character writtenSymbol, String nextState, MoveCaretOption moveCaretOption) {
-        this.writtenSymbol = writtenSymbol;
+    public Command(Character symbol, String nextState, MoveCaretOption moveCaretOption) {
+        this.symbol = symbol;
         this.nextState = nextState;
         this.moveCaretOption = moveCaretOption;
     }
 
-    public Character getWrittenSymbol() {
-        return writtenSymbol;
+    public Character getSymbol() {
+        return symbol;
     }
 
-    public void setWrittenSymbol(Character writtenSymbol) {
-        this.writtenSymbol = writtenSymbol;
+    public void setSymbol(Character symbol) {
+        this.symbol = symbol;
     }
 
     public String getNextState() {

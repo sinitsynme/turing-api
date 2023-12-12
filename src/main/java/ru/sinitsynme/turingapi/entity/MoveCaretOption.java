@@ -1,5 +1,7 @@
 package ru.sinitsynme.turingapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Arrays;
 
 public enum MoveCaretOption {
@@ -19,5 +21,10 @@ public enum MoveCaretOption {
                 .filter(it -> it.alias == alias)
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Eligible arguments are 'L', 'R' and 'N'"));
+    }
+
+    @JsonValue
+    public Character getAlias() {
+        return alias;
     }
 }
