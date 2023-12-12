@@ -96,9 +96,8 @@ public class TuringEngine {
         currentState = command.getNextState();
         moveCaret(command.getMoveCaretOption());
 
+        newTape = checkAndExtendTapeIfNeeded(newTape);
         return newTape;
-
-
     }
 
 
@@ -108,13 +107,23 @@ public class TuringEngine {
         } else if (moveCaretOption == MoveCaretOption.LEFT) {
             caretIndex--;
         }
-
-        //TODO add borders checking
     }
 
     private String replaceChar(String str, char newChar, int index) {
         char[] chars = str.toCharArray();
         chars[index] = newChar;
         return String.valueOf(chars);
+    }
+
+    private String checkAndExtendTapeIfNeeded(String tape) {
+        if (caretIndex == -1) {
+            tape = " " + tape;
+            caretIndex++;
+        }
+        else if (caretIndex == tape.length()) {
+            tape = tape + " ";
+            caretIndex--;
+        }
+        return tape;
     }
 }

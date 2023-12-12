@@ -1,7 +1,6 @@
 version: "3.8"
 services:
-  order:
-    container_name: turing-api
+  turing-api:
     build:
       context: .
     ports:

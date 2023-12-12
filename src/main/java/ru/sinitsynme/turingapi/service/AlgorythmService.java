@@ -16,14 +16,14 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
-public class TuringService {
+public class AlgorythmService {
 
     private final AlgorythmMapper algorythmMapper;
     private final AlgorythmRepository algorythmRepository;
     private final TuringEngine turingEngine;
 
     @Autowired
-    public TuringService(AlgorythmMapper algorythmMapper, AlgorythmRepository algorythmRepository, TuringEngine turingEngine) {
+    public AlgorythmService(AlgorythmMapper algorythmMapper, AlgorythmRepository algorythmRepository, TuringEngine turingEngine) {
         this.algorythmMapper = algorythmMapper;
         this.algorythmRepository = algorythmRepository;
         this.turingEngine = turingEngine;
