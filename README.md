@@ -15,3 +15,9 @@ With local run:
 1) Install MongoDB on your PC
 2) Configure connection
 3) Run app with -dev- profile, ensuring that you have proper configs (check credentials and mongo url)
+
+Frontend implementation:
+--
+done by [B0gda](https://github.com/B0gda)
+
+Link to the repository: https://github.com/B0gda/TuringMachine
