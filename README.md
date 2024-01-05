@@ -10,11 +10,15 @@ With Docker compose
 1) Build project with **mvn package**
 2) Build image for your project
 3) Run **docker compose up -d**
+4) The application is started at port 8100!
 
 With local run:
 1) Install MongoDB on your PC
 2) Configure connection
 3) Run app with -dev- profile, ensuring that you have proper configs (check credentials and mongo url)
+4) The application is started at port 8080!
+
+API docs can be found at `http://localhost:{port}/swagger`
 
 Frontend implementation:
 --
